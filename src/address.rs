@@ -26,7 +26,7 @@ impl Address {
         address.get_bits(start..end)
     }
 
-    pub fn offset(&self, address: usize) -> usize {
+    pub fn _offset(&self, address: usize) -> usize {
         let end = 64 - self.tag_bits - self.index_bits;
         address.get_bits(0..end)
     }

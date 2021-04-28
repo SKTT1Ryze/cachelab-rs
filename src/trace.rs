@@ -15,9 +15,9 @@ pub enum Operation {
 
 #[derive(Debug)]
 pub struct TraceEntry {
-    operation: Operation,
-    address: usize,
-    size: usize
+    pub operation: Operation,
+    pub address: usize,
+    pub size: usize
 }
 
 impl Default for TraceEntry {
@@ -31,11 +31,11 @@ impl Default for TraceEntry {
 }
 
 #[derive(Debug)]
-pub struct Trace {
+pub struct Traces {
     inner: Vec<TraceEntry>
 }
 
-impl Trace {
+impl Traces {
     pub fn empty() -> Self {
         Self {
             inner: Vec::new()
@@ -49,7 +49,7 @@ impl Trace {
         let mut source = String::new();
         reader.read_to_string(&mut source)?;
         let lines: Vec<&str> = source.split('\n').filter(|x| x.len() > 0).collect();
-        let mut trace = Trace::empty();
+        let mut trace = Traces::empty();
         for line in lines {
             let mut trace_entry = TraceEntry::default();
             let s = String::from(line);
@@ -72,5 +72,13 @@ impl Trace {
             trace.inner.push(trace_entry);
         }
         Ok(trace)
+    }
+}
+
+impl std::iter::IntoIterator for Traces {
+    type Item = TraceEntry;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.into_iter()
     }
 }
