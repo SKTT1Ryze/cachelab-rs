@@ -17,17 +17,27 @@ fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
     let args_input: Vec<&str> = args[1..].iter().map(|s| s.as_str()).collect();
     let cli = Cli::parse(args_input);
-    // println!("cli: {:?}", cli);
-    
+
+    if cli.help {
+        help();
+    }
+
     let traces = Traces::from_path(cli.tracefile)?;
-    // println!("traces: {:?}", trace);
+    
+    if cli.track {
+        traces.print_trace();
+    }
     
     let mut cache: Cache<usize> = unsafe { Cache::init(cli.s as usize, cli.e as usize, cli.b as usize) };
-
     let (hits, misses, evicts) = cache.run_traces(traces);
+
     let mut f = File::create(".csim_results")?;
     f.write(format!("{} {} {}\n", hits, misses, evicts).as_bytes())?;
     Ok(())
 }
 
 
+fn help() {
+    println!("Usage:");
+    println!("  csim [-hv] -s <s> -E <E> -b <b> -t <tracefile>")
+}

@@ -20,7 +20,7 @@ pub struct Cache<Data: Default + Clone> {
     size: (usize, usize),
     /// 地址配置
     address: Address,
-    /// (该组是否已经满了， 组内的 Cache 项)
+    /// 组内的 Cache 项
     inner: Vec<Vec<CacheEntry<Data>>>
 }
 
@@ -88,7 +88,6 @@ impl<Data: Default + Clone> Cache<Data> {
     }
 
     /// 执行一条 trace 命令
-    /// 返回 Cache 访问的情况和是否驱逐
     pub fn run_one_trace(&mut self, trace: TraceEntry) -> RunTraceResult {
         match trace.operation {
             Operation::InstructionLoad => { RunTraceResult::Skip }, // do nothing

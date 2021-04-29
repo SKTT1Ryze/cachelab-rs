@@ -13,6 +13,16 @@ pub enum Operation {
     DataModify
 }
 
+impl Operation {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Operation::InstructionLoad => "I",
+            Operation::DataLoad => "L",
+            Operation::DataStore => "S",
+            Operation::DataModify => "M",
+        }
+    }
+}
 #[derive(Debug)]
 pub struct TraceEntry {
     pub operation: Operation,
@@ -72,6 +82,13 @@ impl Traces {
             trace.inner.push(trace_entry);
         }
         Ok(trace)
+    }
+
+    /// 打印轨迹
+    pub fn print_trace(&self) {
+        self.inner.iter().for_each(|e| {
+            println!("{} {}, {}", e.operation.as_str(), e.address, e.size);
+        })
     }
 }
 
